@@ -77,7 +77,6 @@ const handleFilterChange = (e) => {
   }
 };
 
-
   return (
     <div className="filter mb-4">
       <h3>Filter Tasks</h3>
