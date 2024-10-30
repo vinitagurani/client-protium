@@ -35,7 +35,7 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { ...taskData } = task; // Omit _id if it exists
+    const { _id, ...taskData } = task; // Omit _id if it exists
     onSubmit(taskData); // Send taskData without _id
     setTask({ name: '', description: '', dueDate: '', priority: 'Low', status: 'To Do' });
   };
