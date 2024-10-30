@@ -2,7 +2,7 @@
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import store from './Store/store';  // Ensure your store is properly set up in Store/store.js
-import Dashboard from './components/Dashboard.jsx';
+import Dashboard from './components/DashBoard.jsx';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
