@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Set your base URL here, adjust the port if necessary
 // const BASE_URL = 'http://localhost:5000/api/tasks';
-const BASE_URL = 'https://server-protium.onrender.com';
+const BASE_URL = 'https://server-protium.onrender.com/api/tasks';
 
 const initialState = {
   tasks: [],
