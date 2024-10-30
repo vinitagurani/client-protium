@@ -30,9 +30,11 @@ const Dashboard = () => {
   }, [dispatch]);
 
   const handleTaskSubmit = async (task) => {
-    const newTask = { ...task, _id: Date.now().toString(), comments: [] }; // Ensure _id is a string
+    // Omit the _id and comments, if your backend handles that automatically
+    const newTask = { ...task, comments: [] }; // No need to set _id here
     await dispatch(addTask(newTask));
   };
+  
 
   const handleTaskUpdate = async (updatedTask) => {
     await dispatch(updateTask({ id: updatedTask._id, updates: updatedTask }));
