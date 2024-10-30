@@ -5,11 +5,19 @@ const TaskDetail = ({ task, onUpdate }) => {
   if (!task) return <p>Select a task to view details</p>;
 
   const handleStatusChange = (e) => {
-    onUpdate({ ...task, status: e.target.value }); // Pass the entire task with updated status
+    const newStatus = e.target.value;
+    // Prevent unnecessary updates if the value is the same
+    if (newStatus !== task.status) {
+      onUpdate({ ...task, status: newStatus });
+    }
   };
 
   const handlePriorityChange = (e) => {
-    onUpdate({ ...task, priority: e.target.value }); // Pass the entire task with updated priority
+    const newPriority = e.target.value;
+    // Prevent unnecessary updates if the value is the same
+    if (newPriority !== task.priority) {
+      onUpdate({ ...task, priority: newPriority });
+    }
   };
 
   return (
@@ -24,7 +32,7 @@ const TaskDetail = ({ task, onUpdate }) => {
         <label className="form-label">Status:</label>
         <select 
           className="form-select" 
-          value={task.status} 
+          value={task.status || 'To Do'} // Fallback to 'To Do'
           onChange={handleStatusChange}
         >
           <option value="To Do">To Do</option>
@@ -36,7 +44,7 @@ const TaskDetail = ({ task, onUpdate }) => {
         <label className="form-label">Priority:</label>
         <select 
           className="form-select" 
-          value={task.priority} 
+          value={task.priority || 'Low'} // Fallback to 'Low'
           onChange={handlePriorityChange}
         >
           <option value="Low">Low</option>
@@ -47,7 +55,7 @@ const TaskDetail = ({ task, onUpdate }) => {
 
       <div className="comments mt-4">
         <h3>Comments</h3>
-        {/* {task.comments && task.comments.length > 0 ? (
+        {task.comments && task.comments.length > 0 ? (
           task.comments.map((comment) => (
             <div key={comment._id} className="border p-2 rounded mb-1">
               <p>{comment.text}</p>
@@ -58,7 +66,7 @@ const TaskDetail = ({ task, onUpdate }) => {
           ))
         ) : (
           <p>No comments yet.</p>
-        )} */}
+        )}
       </div>
     </div>
   );
@@ -67,6 +75,7 @@ const TaskDetail = ({ task, onUpdate }) => {
 // Define prop types
 TaskDetail.propTypes = {
   task: PropTypes.shape({
+    _id: PropTypes.string.isRequired, // Ensure _id is included
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
     dueDate: PropTypes.string,
@@ -74,11 +83,12 @@ TaskDetail.propTypes = {
     status: PropTypes.string,
     comments: PropTypes.arrayOf(
       PropTypes.shape({
+        _id: PropTypes.string.isRequired, // Ensure _id is included for comments
         text: PropTypes.string.isRequired,
         createdAt: PropTypes.string.isRequired,
       })
     ),
-  }),
+  }).isRequired,
   onUpdate: PropTypes.func.isRequired,
 };
 

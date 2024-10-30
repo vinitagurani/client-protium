@@ -34,9 +34,9 @@ const Dashboard = () => {
     const newTask = { ...task, comments: [] }; // No need to set _id here
     await dispatch(addTask(newTask));
   };
-  
 
   const handleTaskUpdate = async (updatedTask) => {
+    // Ensure that updatedTask contains _id and other properties to update
     await dispatch(updateTask({ id: updatedTask._id, updates: updatedTask }));
   };
 
@@ -61,19 +61,17 @@ const Dashboard = () => {
   const filteredTasks = tasks.filter((task) => {
     const taskDueDate = new Date(task.dueDate);
     const filterDueDate = new Date(filters.dueDate);
-  
+
     const isStatusMatch = filters.status ? task.status === filters.status : true;
     const isPriorityMatch = filters.priority ? task.priority === filters.priority : true;
-    
+
     // Check if the filter due date is set
     const isDueDateMatch = filters.dueDate 
       ? taskDueDate.toDateString() === filterDueDate.toDateString() 
       : true;
-  
+
     return isStatusMatch && isPriorityMatch && isDueDateMatch;
   });
-  
-  
 
   // Searching tasks based on the search term
   const searchedTasks = filteredTasks.filter((task) => {
@@ -88,7 +86,11 @@ const Dashboard = () => {
     <div className="dashboard container mt-4">
       <h1 className="mb-4">Task Dashboard</h1>
       <Search onSearch={setSearchTerm} />
-      <TaskForm onSubmit={handleTaskSubmit} />
+      <TaskForm 
+        onSubmit={handleTaskSubmit} 
+        selectedTaskId={selectedTaskId} 
+        tasks={tasks} 
+      />
       <Filter onFilterChange={handleFilterChange} />
       <TaskList 
         tasks={searchedTasks} 
@@ -99,7 +101,7 @@ const Dashboard = () => {
         <>
           <TaskDetail
             task={selectedTask}
-            onUpdate={handleTaskUpdate}
+            onUpdate={handleTaskUpdate} // Ensure this prop is called in TaskDetail
           />
           <CommentSection 
             taskId={selectedTaskId} 

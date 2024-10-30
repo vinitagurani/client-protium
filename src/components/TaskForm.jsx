@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import '../App.css';
 
-const TaskForm = ({ onSubmit }) => {
+const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
   const [task, setTask] = useState({
     name: '',
     description: '',
@@ -10,6 +10,18 @@ const TaskForm = ({ onSubmit }) => {
     priority: 'Low',
     status: 'To Do',
   });
+
+  useEffect(() => {
+    if (selectedTaskId) {
+      const taskToEdit = tasks.find((task) => task._id === selectedTaskId);
+      if (taskToEdit) {
+        setTask(taskToEdit);
+      }
+    } else {
+      // Reset form when no task is selected
+      setTask({ name: '', description: '', dueDate: '', priority: 'Low', status: 'To Do' });
+    }
+  }, [selectedTaskId, tasks]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,11 +37,10 @@ const TaskForm = ({ onSubmit }) => {
     onSubmit(taskData); // Send taskData without _id
     setTask({ name: '', description: '', dueDate: '', priority: 'Low', status: 'To Do' });
   };
-  
 
   return (
     <form className="task-form p-4 border rounded shadow" onSubmit={handleSubmit}>
-      <h2 className="mb-3">Create Task</h2>
+      <h2 className="mb-3">{selectedTaskId ? 'Edit Task' : 'Create Task'}</h2>
       <div className="mb-3">
         <input
           type="text"
@@ -87,7 +98,7 @@ const TaskForm = ({ onSubmit }) => {
           <option value="Done">Done</option>
         </select>
       </div>
-      <button type="submit" className="btn btn-primary">Add Task</button>
+      <button type="submit" className="btn btn-primary">{selectedTaskId ? 'Update Task' : 'Add Task'}</button>
     </form>
   );
 };
@@ -95,6 +106,8 @@ const TaskForm = ({ onSubmit }) => {
 // Define prop types
 TaskForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  selectedTaskId: PropTypes.string, // Allow undefined if no task is selected
+  tasks: PropTypes.array.isRequired, // Expect an array of tasks
 };
 
 export default TaskForm;

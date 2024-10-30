@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Set your base URL here, adjust the port if necessary
-// const BASE_URL = 'http://localhost:5000/api/tasks';
 const BASE_URL = 'https://server-protium.onrender.com/api/tasks';
 
 const initialState = {
@@ -32,7 +30,6 @@ export const addTask = createAsyncThunk('tasks/addTask', async (task) => {
     throw error; // Rethrow error to handle it in the slice
   }
 });
-
 
 export const updateTask = createAsyncThunk('tasks/updateTask', async ({ id, updates }) => {
   const response = await axios.patch(`${BASE_URL}/${id}`, updates);
@@ -87,15 +84,19 @@ const tasksSlice = createSlice({
         });
       })
       .addCase(updateTask.fulfilled, (state, action) => {
-        const { _id, ...updates } = action.payload; // Use _id instead of id
-        const taskIndex = state.tasks.findIndex((task) => task._id === _id); // Match with _id
+        const updatedTask = action.payload; // The payload should be the updated task
+        const taskIndex = state.tasks.findIndex((task) => task._id === updatedTask._id); // Use _id for matching
+
         if (taskIndex !== -1) {
-          state.tasks[taskIndex] = { ...state.tasks[taskIndex], ...updates };
+          state.tasks[taskIndex] = { ...state.tasks[taskIndex], ...updatedTask }; // Merge updated fields
+        } else {
+          console.error(`Task with ID ${updatedTask._id} not found for update.`); // Debugging message
         }
       })
       .addCase(addComment.fulfilled, (state, action) => {
         const updatedTask = action.payload; // API should return updated task with comments
         const taskIndex = state.tasks.findIndex((task) => task._id === updatedTask._id); // Match with _id
+
         if (taskIndex !== -1) {
           state.tasks[taskIndex] = updatedTask; // Replace task with updated task
         }
