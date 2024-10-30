@@ -21,10 +21,11 @@ const TaskForm = ({ onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(task); // Send the task to the parent component
-    // Reset the form fields after submission
+    const { _id, ...taskData } = task; // Omit _id if it exists
+    onSubmit(taskData); // Send taskData without _id
     setTask({ name: '', description: '', dueDate: '', priority: 'Low', status: 'To Do' });
   };
+  
 
   return (
     <form className="task-form p-4 border rounded shadow" onSubmit={handleSubmit}>
