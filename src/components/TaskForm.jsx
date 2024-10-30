@@ -15,7 +15,9 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
     if (selectedTaskId) {
       const taskToEdit = tasks.find((task) => task._id === selectedTaskId);
       if (taskToEdit) {
-        setTask(taskToEdit);
+        // Format the due date to YYYY-MM-DD
+        const formattedDueDate = new Date(taskToEdit.dueDate).toISOString().split('T')[0];
+        setTask({ ...taskToEdit, dueDate: formattedDueDate });
       }
     } else {
       // Reset form when no task is selected
@@ -33,14 +35,14 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { _id, ...taskData } = task; // Omit _id if it exists
+    const { ...taskData } = task; // Omit _id if it exists
     onSubmit(taskData); // Send taskData without _id
     setTask({ name: '', description: '', dueDate: '', priority: 'Low', status: 'To Do' });
   };
 
   return (
     <form className="task-form p-4 border rounded shadow" onSubmit={handleSubmit}>
-      <h2 className="mb-3">{selectedTaskId ? 'Edit Task' : 'Create Task'}</h2>
+      <h2 className="mb-3">Create Task</h2>
       <div className="mb-3">
         <input
           type="text"
@@ -98,7 +100,7 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
           <option value="Done">Done</option>
         </select>
       </div>
-      <button type="submit" className="btn btn-primary">{selectedTaskId ? 'Update Task' : 'Add Task'}</button>
+      <button type="submit" className="btn btn-primary">Add Task</button>
     </form>
   );
 };
@@ -106,8 +108,8 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
 // Define prop types
 TaskForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  selectedTaskId: PropTypes.string, // Allow undefined if no task is selected
-  tasks: PropTypes.array.isRequired, // Expect an array of tasks
+  selectedTaskId: PropTypes.string,
+  tasks: PropTypes.array.isRequired,
 };
 
 export default TaskForm;
