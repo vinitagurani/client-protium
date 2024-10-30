@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const BASE_URL = 'https://server-protium.onrender.com/api/tasks';
+// const BASE_URL = 'http://localhost:5000/api/tasks';
 
 const initialState = {
   tasks: [],
@@ -45,6 +46,12 @@ export const addComment = createAsyncThunk('tasks/addComment', async ({ taskId, 
 export const deleteComment = createAsyncThunk('tasks/deleteComment', async ({ taskId, commentId }) => {
   await axios.delete(`${BASE_URL}/${taskId}/comments/${commentId}`); // Perform the delete request
   return { taskId, commentId }; // Return the taskId and commentId
+});
+
+// New thunk for deleting a task
+export const deleteTask = createAsyncThunk('tasks/deleteTask', async (taskId) => {
+  await axios.delete(`${BASE_URL}/${taskId}`); // Make sure this URL is correct
+  return taskId; // Return the ID of the deleted task
 });
 
 const tasksSlice = createSlice({
@@ -109,6 +116,9 @@ const tasksSlice = createSlice({
           // Filter out the deleted comment
           state.tasks[taskIndex].comments = state.tasks[taskIndex].comments.filter(comment => comment._id !== commentId);
         }
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.tasks = state.tasks.filter(task => task._id !== action.payload); // Filter out the deleted task
       });
   },
 });

@@ -55,7 +55,7 @@ const TaskDetail = ({ task, onUpdate }) => {
 
       <div className="comments mt-4">
         <h3>Comments</h3>
-        {task.comments && task.comments.length > 0 ? (
+        {/* {task.comments && task.comments.length > 0 ? (
           task.comments.map((comment) => (
             <div key={comment._id} className="border p-2 rounded mb-1">
               <p>{comment.text}</p>
@@ -66,7 +66,7 @@ const TaskDetail = ({ task, onUpdate }) => {
           ))
         ) : (
           <p>No comments yet.</p>
-        )}
+        )} */}
       </div>
     </div>
   );

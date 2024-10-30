@@ -14,6 +14,7 @@ import {
   selectTask,
   addComment,
   fetchTasks,
+  deleteTask // Import the deleteTask action
 } from '../Store/tasksSlice'; // Ensure the path is correct (case-sensitive)
 
 const Dashboard = () => {
@@ -30,13 +31,11 @@ const Dashboard = () => {
   }, [dispatch]);
 
   const handleTaskSubmit = async (task) => {
-    // Omit the _id and comments, if your backend handles that automatically
     const newTask = { ...task, comments: [] }; // No need to set _id here
     await dispatch(addTask(newTask));
   };
 
   const handleTaskUpdate = async (updatedTask) => {
-    // Ensure that updatedTask contains _id and other properties to update
     await dispatch(updateTask({ id: updatedTask._id, updates: updatedTask }));
   };
 
@@ -49,11 +48,19 @@ const Dashboard = () => {
   };
 
   const handleTaskSelect = (taskId) => {
-    // Toggle task selection
     if (selectedTaskId === taskId) {
       dispatch(selectTask(null)); // Deselect if already selected
     } else {
       dispatch(selectTask(taskId)); // Select the new task
+    }
+  };
+
+  const handleTaskDelete = async (taskId) => {
+    try {
+      await dispatch(deleteTask(taskId)); // Call the deleteTask action
+      console.log('Task deleted successfully');
+    } catch (error) {
+      console.error('Error deleting task:', error);
     }
   };
 
@@ -64,8 +71,6 @@ const Dashboard = () => {
 
     const isStatusMatch = filters.status ? task.status === filters.status : true;
     const isPriorityMatch = filters.priority ? task.priority === filters.priority : true;
-
-    // Check if the filter due date is set
     const isDueDateMatch = filters.dueDate 
       ? taskDueDate.toDateString() === filterDueDate.toDateString() 
       : true;
@@ -95,13 +100,13 @@ const Dashboard = () => {
       <TaskList 
         tasks={searchedTasks} 
         onTaskSelect={handleTaskSelect} 
-        selectedTaskId={selectedTaskId} 
+        onTaskDelete={handleTaskDelete} // Pass the delete handler here
       />
       {selectedTask && (
         <>
           <TaskDetail
             task={selectedTask}
-            onUpdate={handleTaskUpdate} // Ensure this prop is called in TaskDetail
+            onUpdate={handleTaskUpdate}
           />
           <CommentSection 
             taskId={selectedTaskId} 

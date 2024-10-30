@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { FaCheck } from 'react-icons/fa'; // Import check icon
 import '../App.css';
 
 const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
@@ -10,17 +11,16 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
     priority: 'Low',
     status: 'To Do',
   });
+  const [successMessage, setSuccessMessage] = useState(false);
 
   useEffect(() => {
     if (selectedTaskId) {
       const taskToEdit = tasks.find((task) => task._id === selectedTaskId);
       if (taskToEdit) {
-        // Format the due date to YYYY-MM-DD
         const formattedDueDate = new Date(taskToEdit.dueDate).toISOString().split('T')[0];
         setTask({ ...taskToEdit, dueDate: formattedDueDate });
       }
     } else {
-      // Reset form when no task is selected
       setTask({ name: '', description: '', dueDate: '', priority: 'Low', status: 'To Do' });
     }
   }, [selectedTaskId, tasks]);
@@ -35,14 +35,26 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { _id, ...taskData } = task; // Omit _id if it exists
-    onSubmit(taskData); // Send taskData without _id
+    const { _id, ...taskData } = task;
+    onSubmit(taskData);
     setTask({ name: '', description: '', dueDate: '', priority: 'Low', status: 'To Do' });
+    setSuccessMessage(true); // Show success message
+
+    // Hide success message after 3 seconds
+    setTimeout(() => setSuccessMessage(false), 3000);
   };
 
   return (
     <form className="task-form p-4 border rounded shadow" onSubmit={handleSubmit}>
       <h2 className="mb-3">Create Task</h2>
+
+      {successMessage && (
+        <div className="alert alert-success d-flex align-items-center mb-3">
+          <FaCheck className="me-2" />
+          Task created successfully!
+        </div>
+      )}
+
       <div className="mb-3">
         <input
           type="text"
@@ -105,7 +117,6 @@ const TaskForm = ({ onSubmit, selectedTaskId, tasks }) => {
   );
 };
 
-// Define prop types
 TaskForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   selectedTaskId: PropTypes.string,
