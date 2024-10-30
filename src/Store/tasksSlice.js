@@ -24,9 +24,15 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
 });
 
 export const addTask = createAsyncThunk('tasks/addTask', async (task) => {
-  const response = await axios.post(BASE_URL, task);
-  return response.data; // Ensure the API returns the newly created task
+  try {
+    const response = await axios.post(BASE_URL, task);
+    return response.data; // Ensure the API returns the newly created task
+  } catch (error) {
+    console.error("Error while adding task:", error.response.data); // Log error response
+    throw error; // Rethrow error to handle it in the slice
+  }
 });
+
 
 export const updateTask = createAsyncThunk('tasks/updateTask', async ({ id, updates }) => {
   const response = await axios.patch(`${BASE_URL}/${id}`, updates);
