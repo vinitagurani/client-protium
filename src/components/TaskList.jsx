@@ -6,6 +6,7 @@ const TaskList = ({ tasks, onTaskSelect, onTaskDelete }) => {
   return (
     <div className="task-list p-4 border rounded shadow">
       <h2 className="mb-4">Task List</h2>
+      <p className='info'>For task details, please click on the respective list item and scroll down</p>
       <table className="table table-striped">
         <thead>
           <tr>

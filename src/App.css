@@ -39,6 +39,25 @@
     padding: 10px;
   }
 
+  .info {
+    color: blue; /* Initial color */
+    animation: colorChange 2s linear infinite; /* Adjust duration and timing */
+    font-weight: bold;
+  }
+  
+  @keyframes colorChange {
+    0% {
+      color: blue; /* Start with blue */
+    }
+    50% {
+      color: green; /* Change to green at halfway point */
+    }
+    100% {
+      color: blue; /* Change back to blue */
+    }
+  }
+  
+
 
 
 
