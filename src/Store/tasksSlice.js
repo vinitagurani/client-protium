@@ -54,6 +54,11 @@ export const deleteTask = createAsyncThunk('tasks/deleteTask', async (taskId) =>
   return taskId; // Return the ID of the deleted task
 });
 
+export const assignTask = createAsyncThunk('tasks/assignTask', async ({ taskId, userId }) => {
+  const response = await axios.patch(`${BASE_URL}/${taskId}/assign`, { assignedTo: userId });
+  return response.data;
+});
+
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
@@ -119,6 +124,13 @@ const tasksSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.tasks = state.tasks.filter(task => task._id !== action.payload); // Filter out the deleted task
+      })
+      .addCase(assignTask.fulfilled, (state, action) => {
+        const updatedTask = action.payload;
+        const taskIndex = state.tasks.findIndex(task => task._id === updatedTask._id);
+        if (taskIndex !== -1) {
+          state.tasks[taskIndex] = updatedTask;
+        }
       });
   },
 });

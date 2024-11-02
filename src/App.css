@@ -8,11 +8,12 @@
   }
   
   /* Loading.css */
-.loading-spinner {
+   .loading-spinner {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: transparent;
   }
   
   .spinner {
@@ -35,7 +36,11 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.8); /* Optional for semi-transparent background */
     padding: 10px;
   }
+
+
+
+
+
   
